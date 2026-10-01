@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="violet">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CampusTrack | Interactive College Events, Exams & Submissions Tracker</title>
+  <meta name="description"
+    content="Track all upcoming college events, exams, hackathons, workshops, and submissions with live countdowns and interactive themes.">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <!-- Ambient Theme Glow Accents -->
+  <div class="ambient-glow glow-top" aria-hidden="true"></div>
+  <div class="ambient-glow glow-bottom" aria-hidden="true"></div>
+
+  <!-- Interactive Confetti Canvas for Celebratory Marks -->
+  <canvas id="confettiCanvas" class="confetti-canvas"></canvas>
+
+  <div class="app-layout">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-container">
+        <div class="brand">
+          <div class="brand-badge">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+            </svg>
+          </div>
+          <div>
+            <div class="brand-title-row">
+              <h1>CampusTrack</h1>
+              <span class="pulse-tag">Live Campus Hub</span>
+            </div>
+            <p class="brand-subtitle">Interactive Tracker for Events, Exams, Fests &amp; Deadlines</p>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <!-- Live Clock -->
+          <div class="live-clock">
+            <span id="liveTime" class="clock-time">--:--:--</span>
+            <span id="liveDate" class="clock-date">Loading...</span>
+          </div>
+
+          <!-- Sound FX Toggle Button -->
+          <button id="soundToggleBtn" class="header-icon-btn" title="Toggle Sound Feedback (Web Audio Chime)"
+            aria-label="Toggle Sound">
+            <span class="sound-icon-on">🔊</span>
+            <span class="sound-icon-off hidden">🔇</span>
+          </button>
+
+          <!-- Theme Palette Selector Dropdown -->
+          <div class="theme-dropdown-wrapper">
+            <button id="themeMenuBtn" class="theme-btn" title="Change Visual Color Theme">
+              <span class="theme-palette-icon">🎨</span>
+              <span id="currentThemeLabel">Theme</span>
+              <span class="dropdown-arrow">▾</span>
+            </button>
+            <div id="themeDropdownMenu" class="theme-dropdown hidden">
+              <div class="theme-dropdown-header">Select Color Aesthetic</div>
+              <button class="theme-opt active" data-theme="violet">
+                <span class="theme-swatch swatch-violet"></span>
+                <span>Cosmic Violet (Default)</span>
+              </button>
+              <button class="theme-opt" data-theme="cyan">
+                <span class="theme-swatch swatch-cyan"></span>
+                <span>Cyber Cyan</span>
+              </button>
+              <button class="theme-opt" data-theme="emerald">
+                <span class="theme-swatch swatch-emerald"></span>
+                <span>Neon Matrix</span>
+              </button>
+              <button class="theme-opt" data-theme="sunset">
+                <span class="theme-swatch swatch-sunset"></span>
+                <span>Sunset Ruby</span>
+              </button>
+              <button class="theme-opt" data-theme="light">
+                <span class="theme-swatch swatch-light"></span>
+                <span>Daylight Minimalist</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Add Event CTA -->
+          <button id="openAddModalBtn" class="btn btn-primary">
+            <span>+ Add New Event</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <!-- Hero Highlight: Next Big Upcoming Event -->
+      <section id="heroHighlight" class="hero-banner">
+        <div class="hero-content">
+          <div class="hero-badge-row">
+            <span class="hero-pill">⚡ NEXT UPCOMING</span>
+            <span id="heroCategory" class="hero-category-tag">🏆 Hackathon</span>
+          </div>
+          <h2 id="heroTitle" class="hero-title">Loading next event...</h2>
+          <div class="hero-meta">
+            <span id="heroDate" class="hero-meta-item">📅 Date TBD</span>
+            <span id="heroVenue" class="hero-meta-item">📍 Venue TBD</span>
+          </div>
+          <div class="hero-actions">
+            <a id="heroActionBtn" href="#" target="_blank" rel="noopener" class="btn btn-hero">Register / Details
+              &rarr;</a>
+            <button id="heroMarkDoneBtn" class="btn btn-hero-outline">Mark as Attended / Done</button>
+            <button id="heroInspectBtn" class="btn btn-hero-secondary">Inspect Details 🔍</button>
+          </div>
+        </div>
+
+        <div class="hero-timer-box">
+          <span class="timer-label">STARTS IN</span>
+          <div class="timer-digits">
+            <div class="digit-group">
+              <span id="heroDays" class="digit-val">00</span>
+              <span class="digit-txt">DAYS</span>
+            </div>
+            <span class="digit-colon">:</span>
+            <div class="digit-group">
+              <span id="heroHours" class="digit-val">00</span>
+              <span class="digit-txt">HOURS</span>
+            </div>
+            <span class="digit-colon">:</span>
+            <div class="digit-group">
+              <span id="heroMins" class="digit-val">00</span>
+              <span class="digit-txt">MINS</span>
+            </div>
+            <span class="digit-colon">:</span>
+            <div class="digit-group">
+              <span id="heroSecs" class="digit-val">00</span>
+              <span class="digit-txt">SECS</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quick Metrics Strip (Click to Filter) -->
+      <section class="stats-strip" aria-label="Quick Category Stats">
+        <div class="stat-box active-stat" data-stat-filter="all" title="Click to view all events">
+          <span class="stat-num" id="statTotalCount">0</span>
+          <span class="stat-name">Total Events</span>
+        </div>
+        <div class="stat-box" data-stat-filter="exam" title="Click to filter Exams">
+          <span class="stat-num text-purple" id="statExams">0</span>
+          <span class="stat-name">📚 Exams &amp; Tests</span>
+        </div>
+        <div class="stat-box" data-stat-filter="hackathon" title="Click to filter Hackathons">
+          <span class="stat-num text-cyan" id="statHackathons">0</span>
+          <span class="stat-name">🏆 Hackathons</span>
+        </div>
+        <div class="stat-box" data-stat-filter="submission" title="Click to filter Submissions">
+          <span class="stat-num text-amber" id="statSubmissions">0</span>
+          <span class="stat-name">📝 Deadlines &amp; Labs</span>
+        </div>
+        <div class="stat-box" data-stat-filter="workshop" title="Click to filter Workshops">
+          <span class="stat-num text-indigo" id="statWorkshops">0</span>
+          <span class="stat-name">💡 Workshops</span>
+        </div>
+        <div class="stat-box" data-stat-filter="fest" title="Click to filter Fests & Sports">
+          <span class="stat-num text-rose" id="statFests">0</span>
+          <span class="stat-name">🎭 Fests &amp; Sports</span>
+        </div>
+      </section>
+
+      <!-- Filter & Search Toolbar -->
+      <section class="toolbar">
+        <div class="search-wrapper">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="searchInput" placeholder="Search events by title, department, exam, venue...">
+          <button id="clearSearchBtn" class="clear-btn hidden" aria-label="Clear Search">&times;</button>
+        </div>
+
+        <div class="filter-pills" role="tablist">
+          <button class="pill active" data-filter="all">All Events</button>
+          <button class="pill" data-filter="starred">⭐ Starred</button>
+          <button class="pill" data-filter="exam">📚 Exams</button>
+          <button class="pill" data-filter="hackathon">🏆 Hackathons</button>
+          <button class="pill" data-filter="submission">📝 Submissions</button>
+          <button class="pill" data-filter="workshop">💡 Workshops</button>
+          <button class="pill" data-filter="fest">🎭 Cultural &amp; Fests</button>
+          <button class="pill" data-filter="career">💼 Placement &amp; Career</button>
+          <button class="pill" data-filter="sports">⚽ Sports</button>
+          <button class="pill" data-filter="done">✅ Completed</button>
+        </div>
+
+        <div class="toolbar-actions">
+          <div class="view-mode-toggle">
+            <button id="viewGridBtn" class="view-toggle-btn active" title="Grid View">🗂️ Grid</button>
+            <button id="viewCompactBtn" class="view-toggle-btn" title="Compact List View">📋 Compact List</button>
+          </div>
+
+          <div class="sort-and-export">
+            <select id="sortSelect" class="select-dropdown">
+              <option value="date-asc">Soonest Date First</option>
+              <option value="date-desc">Latest Date First</option>
+              <option value="title-asc">Title (A - Z)</option>
+            </select>
+            <button id="exportIcsBtn" class="btn btn-outline" title="Export schedule to Google / Apple Calendar">
+              <span>📅 Export iCal</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Events Card Grid & List View -->
+      <section class="events-section">
+        <div id="eventsGrid" class="events-grid">
+          <!-- Rendered dynamically by app.js -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="empty-state hidden">
+          <div class="empty-icon">🎓</div>
+          <h3>No events match your criteria</h3>
+          <p>Try switching filters or add a new college event, exam, or submission.</p>
+          <button id="emptyAddBtn" class="btn btn-primary">+ Add New Event</button>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="footer-container">
+        <p>CampusTrack &bull; Interactive College Events Hub &bull; Stored locally in your browser</p>
+        <button id="resetDemoBtn" class="btn-text">Reset to Default Events</button>
+      </div>
+    </footer>
+  </div>
+
+  <!-- MODAL: Add / Edit College Event -->
+  <dialog id="eventModal" class="event-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="modalHeading">Add New College Event</h2>
+        <button id="closeModalBtn" class="modal-close" aria-label="Close modal">&times;</button>
+      </div>
+
+      <form id="eventForm" class="modal-form">
+        <input type="hidden" id="editEventId">
+
+        <div class="form-group">
+          <label for="eventTitle">Event or Exam Title <span class="req">*</span></label>
+          <input type="text" id="eventTitle" placeholder="e.g. Computer Networks Midterm or HackSpark 24h Hackathon"
+            required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-half">
+            <label for="eventCategory">Category <span class="req">*</span></label>
+            <select id="eventCategory" required>
+              <option value="exam">📚 Midterm / Final Exam / Quiz</option>
+              <option value="hackathon">🏆 Hackathon / Coding Contest</option>
+              <option value="submission">📝 Assignment / Project Submission</option>
+              <option value="workshop">💡 Workshop / Seminar / Guest Lecture</option>
+              <option value="fest">🎭 Cultural / Tech Fest</option>
+              <option value="career">💼 Placement / Career Drive</option>
+              <option value="sports">⚽ Sports Tournament</option>
+              <option value="other">📌 Other College Activity</option>
+            </select>
+          </div>
+
+          <div class="form-group col-half">
+            <label for="eventDept">Host Club / Department</label>
+            <input type="text" id="eventDept" placeholder="e.g. Dept of CSE, ACM Chapter, Math Dept">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-half">
+            <label for="eventDate">Date &amp; Time <span class="req">*</span></label>
+            <input type="datetime-local" id="eventDate" required>
+          </div>
+
+          <div class="form-group col-half">
+            <label for="eventVenue">Venue / Room / Hall</label>
+            <input type="text" id="eventVenue" placeholder="e.g. Exam Hall 102, Auditorium Hall A, Classroom">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="eventLink">Registration / Portal URL (optional)</label>
+          <input type="url" id="eventLink" placeholder="https://unstop.com or https://classroom.google.com">
+        </div>
+
+        <div class="form-group">
+          <label for="eventDesc">Description &amp; Syllabus / Guidelines</label>
+          <textarea id="eventDesc" rows="3"
+            placeholder="Syllabus chapters, rules, submission format, materials required..."></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" id="cancelModalBtn" class="btn btn-outline">Cancel</button>
+          <button type="submit" id="saveEventBtn" class="btn btn-primary">Save Event</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- MODAL: Interactive Event Details Drawer -->
+  <dialog id="eventDetailsModal" class="event-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="details-category-pill" id="detailCategoryBadge">🏆 Category</div>
+        <button id="closeDetailsModalBtn" class="modal-close" aria-label="Close details">&times;</button>
+      </div>
+
+      <div class="details-body">
+        <h2 id="detailTitle" class="detail-title">Event Title</h2>
+        <div class="detail-meta-grid">
+          <div class="detail-meta-box">
+            <span class="meta-box-label">📅 Date &amp; Time</span>
+            <span id="detailDateTime" class="meta-box-val">Oct 10, 2026 • 10:00 AM</span>
+          </div>
+          <div class="detail-meta-box">
+            <span class="meta-box-label">📍 Venue / Location</span>
+            <span id="detailVenue" class="meta-box-val">Auditorium Hall B</span>
+          </div>
+          <div class="detail-meta-box">
+            <span class="meta-box-label">🏛️ Department / Club</span>
+            <span id="detailDept" class="meta-box-val">Computer Science Dept</span>
+          </div>
+          <div class="detail-meta-box">
+            <span class="meta-box-label">⏱️ Live Countdown</span>
+            <span id="detailCountdown" class="meta-box-val text-cyan">In 2 days 4 hours</span>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <h4>Guidelines &amp; Description</h4>
+          <p id="detailDesc" class="detail-desc-text">Full description details...</p>
+        </div>
+
+        <!-- Interactive Checklist for Exam/Event Prep -->
+        <div class="detail-section">
+          <h4>Preparation Checklist</h4>
+          <ul class="interactive-checklist" id="detailChecklist">
+            <li><label><input type="checkbox"> Verify registration / Hall ticket</label></li>
+            <li><label><input type="checkbox"> Bring College ID &amp; required stationery/laptop</label></li>
+            <li><label><input type="checkbox"> Review syllabus / project slides</label></li>
+          </ul>
+        </div>
+
+        <div class="detail-actions">
+          <a id="detailExternalLink" href="#" target="_blank" rel="noopener" class="btn btn-hero">Open Official Portal
+            &rarr;</a>
+          <button id="detailCopyBtn" class="btn btn-outline">📋 Copy Details</button>
+          <button id="detailCalendarBtn" class="btn btn-outline">📅 Export to Calendar</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
