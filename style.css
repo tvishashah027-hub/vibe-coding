@@ -1694,14 +1694,37 @@ body {
   flex-shrink: 0;
 }
 
-.dot-exam { background: var(--cat-exam); }
-.dot-hackathon { background: var(--cat-hackathon); }
-.dot-submission { background: var(--cat-submission); }
-.dot-workshop { background: var(--cat-workshop); }
-.dot-fest { background: var(--cat-fest); }
-.dot-career { background: var(--cat-career); }
-.dot-sports { background: var(--cat-sports); }
-.dot-other { background: var(--text-muted); }
+.dot-exam {
+  background: var(--cat-exam);
+}
+
+.dot-hackathon {
+  background: var(--cat-hackathon);
+}
+
+.dot-submission {
+  background: var(--cat-submission);
+}
+
+.dot-workshop {
+  background: var(--cat-workshop);
+}
+
+.dot-fest {
+  background: var(--cat-fest);
+}
+
+.dot-career {
+  background: var(--cat-career);
+}
+
+.dot-sports {
+  background: var(--cat-sports);
+}
+
+.dot-other {
+  background: var(--text-muted);
+}
 
 .compact-body {
   min-width: 0;
@@ -1823,8 +1846,15 @@ body {
 }
 
 @keyframes pulse-text {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
 }
 
 /* ==========================================================================
@@ -1866,10 +1896,21 @@ body {
   opacity: 1;
 }
 
-.toast-success { border-left: 3px solid var(--accent-emerald); }
-.toast-warning { border-left: 3px solid var(--accent-amber); }
-.toast-error   { border-left: 3px solid var(--accent-rose); }
-.toast-info    { border-left: 3px solid var(--primary); }
+.toast-success {
+  border-left: 3px solid var(--accent-emerald);
+}
+
+.toast-warning {
+  border-left: 3px solid var(--accent-amber);
+}
+
+.toast-error {
+  border-left: 3px solid var(--accent-rose);
+}
+
+.toast-info {
+  border-left: 3px solid var(--primary);
+}
 
 .toast-icon {
   font-size: 1.1rem;
